@@ -5,6 +5,7 @@ Imports System
 Imports System.IO
 Imports System.Diagnostics
 Imports System.Uri
+Imports NLog
 
 Public Class Form1
     'For sorting columns in listviews
@@ -23,6 +24,7 @@ Public Class Form1
 	Dim ResetHours As Integer
 	Public Version As KodiVersion = KodiVersion.Helix
 
+	Dim _logger = LogManager.GetCurrentClassLogger()
 
     Public Function LookUpGenre(ByVal GenreName As String)
         'This looks up the Genre based on the name and returns the proper Genre ID
@@ -489,17 +491,25 @@ Public Class Form1
 		If Not My.Settings.VideoDatabaseLocation = "False" And Not String.IsNullOrEmpty(My.Settings.VideoDatabaseLocation) And Not String.IsNullOrEmpty(My.Settings.PseudoTvSettingsLocation) And Not String.IsNullOrEmpty(My.Settings.AddonDatabaseLocation) Then
 			DatabaseType = 0
 			VideoDatabaseLocation = My.Settings.VideoDatabaseLocation
+			_logger.Debug(VideoDatabaseLocation)
 			PseudoTvSettingsLocation = My.Settings.PseudoTvSettingsLocation
+			_logger.Debug(PseudoTvSettingsLocation)
 			AddonDatabaseLocation = My.Settings.AddonDatabaseLocation
+			_logger.Debug(AddonDatabaseLocation)
 			Me.Version = My.Settings.Version
+			_logger.Debug(Me.Version)
 			RefreshALL()
 			RefreshTVGuide()
 		ElseIf Not My.Settings.VideoDatabaseLocation = "False" And Not String.IsNullOrEmpty(My.Settings.MySQLConnectionString) And Not String.IsNullOrEmpty(My.Settings.PseudoTvSettingsLocation) And Not String.IsNullOrEmpty(My.Settings.AddonDatabaseLocation) Then
 			DatabaseType = 1
 			MySQLConnectionString = My.Settings.MySQLConnectionString
+			_logger.Debug(MySQLConnectionString)
 			PseudoTvSettingsLocation = My.Settings.PseudoTvSettingsLocation
+			_logger.Debug(PseudoTvSettingsLocation)
 			AddonDatabaseLocation = My.Settings.AddonDatabaseLocation
+			_logger.Debug(AddonDatabaseLocation)
 			Me.Version = My.Settings.Version
+			_logger.Debug(Me.Version)
 			RefreshALL()
 			RefreshTVGuide()
 		Else
@@ -1046,8 +1056,6 @@ Public Class Form1
 				DbExecute("INSERT INTO studiolinktvshow (idStudio, idShow) VALUES ('" & NetworkID & "', '" & TVShowLabel.Text & "')")
 			End If
 
-
-
 			DbExecute("UPDATE tvshow SET c00 = '" & TvShowName & "', c08 = '" & ShowGenres & "', c14 ='" & txtShowNetwork.Text & "' WHERE idShow = '" & TVShowLabel.Text & "'")
 			Status.Text = "Updated " & TxtShowName.Text & " Successfully"
 
@@ -1057,7 +1065,7 @@ Public Class Form1
 				'add each one.  one by one.
 				For x = 0 To ListTVGenres.Items.Count - 1
 					Dim GenreID = LookUpGenre(ListTVGenres.Items(x).ToString)
-					DbExecute("INSERT INTO genre_link (idGenre, idShow) VALUES ('" & GenreID & "', '" & TVShowLabel.Text & "', 'tvshow')")
+					DbExecute("INSERT INTO genre_link (genre_id, media_id, media_type) VALUES ('" & GenreID & "', '" & TVShowLabel.Text & "', 'tvshow')")
 				Next
 			Else
 				'Remove all genres from tv show
@@ -1069,8 +1077,6 @@ Public Class Form1
 					DbExecute("INSERT INTO genrelinktvshow (idGenre, idShow) VALUES ('" & GenreID & "', '" & TVShowLabel.Text & "')")
 				Next
 			End If
-
-			
 
 			'Now update the tv show table
 
@@ -1548,7 +1554,7 @@ Public Class Form1
 
 				If Option1 = 1 Then
 					PlayListLocation.Text = TVGuideList.Items(TVGuideList.SelectedIndices(0)).SubItems(2).Text
-					SortTypeBox.SelectedIndex = TVGuideList.Items(TVGuideList.SelectedIndices(0)).SubItems(8).Text
+					'SortTypeBox.SelectedIndex = TVGuideList.Items(TVGuideList.SelectedIndices(0)).SubItems(8).Text
 					Dim index As Integer
 					index = MediaLimitBox.FindString(TVGuideList.Items(TVGuideList.SelectedIndices(0)).SubItems(7).Text)
 					MediaLimitBox.SelectedIndex = index
@@ -2694,7 +2700,6 @@ Public Class Form1
             Dim NetworkID = LookUpNetwork(txtMovieNetwork.Text)
 			Dim MovieID As String = MovieList.SelectedItems(0).SubItems(1).Text
 
-
 			If (Version >= KodiVersion.Isengard) Then
 				DbExecute("DELETE FROM studio_link WHERE media_id = '" & MovieID & "'")
 				DbExecute("INSERT INTO studio_link (studio_id, media_id, media_type) VALUES ('" & NetworkID & "', '" & MovieID & "', 'movie')")
@@ -2725,7 +2730,6 @@ Public Class Form1
 					DbExecute("INSERT INTO genrelinkmovie (idGenre, idMovie) VALUES ('" & GenreID & "', '" & MovieID & "')")
 				Next
 			End If
-            
 
             'Save our spot on the list.
             Dim SavedName = txtMovieNetwork.Text
@@ -3027,5 +3031,4 @@ Public Class Form1
     Private Sub Button20_Click(sender As Object, e As EventArgs) Handles Button20.Click
 
     End Sub
-
 End Class

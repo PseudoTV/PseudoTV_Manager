@@ -215,4 +215,26 @@ Public Class Form6
 		End Select
 	End Sub
 
+	Public Function ReadVersion(ByVal GenreName As String)
+		'This looks up the Genre based on the name and returns the proper Genre ID
+
+		Dim GenreID As String = Nothing
+
+		Dim SelectArray(0)
+		SelectArray(0) = 0
+
+		'Shoot it over to the ReadRecord sub
+		Dim ReturnArray() As String = DbReadRecord(TextBox1.Text, "SELECT idVersion FROM version", SelectArray)
+
+		'The ID # is all we need.
+		'Just make sure it's not a null reference.
+		If ReturnArray Is Nothing Then
+			MsgBox("nothing!")
+		Else
+			GenreID = ReturnArray(0)
+		End If
+
+		Return GenreID
+	End Function
+
 End Class

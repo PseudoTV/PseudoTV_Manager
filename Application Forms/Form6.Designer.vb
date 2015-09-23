@@ -293,7 +293,7 @@ Partial Class Form6
 		Me.AddonDbLocDef.Size = New System.Drawing.Size(399, 26)
 		Me.AddonDbLocDef.TabIndex = 11
 		Me.AddonDbLocDef.Text = "Typically located :" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "C:\Users\Username\AppData\Roaming\XBMC\userdata\Database\Add" & _
-	"ons16.db " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
+	"ons19.db " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
 		'
 		'AddonDbLoc
 		'

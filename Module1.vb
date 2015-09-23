@@ -3,6 +3,7 @@ Imports System.IO
 Imports System.Data
 Imports MySql.Data.MySqlClient
 Imports System.Text.RegularExpressions
+Imports NLog
 
 Public Enum KodiVersion
 	Gotham = 13
@@ -12,6 +13,9 @@ Public Enum KodiVersion
 End Enum
 
 Module Module1
+
+	Dim _logger = LogManager.GetCurrentClassLogger()
+
 	Public Function GetKodiVersion(ByVal VideoDBFileName As String)
 		Dim regex As Regex = New Regex("(MyVideos)(\d+).db")
 		Dim match As Match = regex.Match(VideoDBFileName)
@@ -86,6 +90,7 @@ Module Module1
 			End While
 
 		Catch myerror As SQLite.SQLiteException
+			_logger.Error(myerror.Message)
 			MessageBox.Show("Error Connecting to Database: " & myerror.Message)
 
 		Finally
@@ -120,6 +125,7 @@ Module Module1
 			SQLcommand.ExecuteNonQuery()
 
 		Catch myerror As SQLite.SQLiteException
+			_logger.Error(myerror.Message)
 			MessageBox.Show("Error Connecting to Database: " & myerror.Message)
 		Finally
 			'Dispose of and close the connection.
@@ -172,6 +178,7 @@ Module Module1
 				End While
 
 			Catch myerror As MySqlException
+				_logger.Error(myerror.Message)
 				MessageBox.Show("Error Connecting to Database: " & myerror.Message)
 
 			Finally
@@ -213,6 +220,7 @@ Module Module1
 				End While
 
 			Catch myerror As MySqlException
+				_logger.Error(myerror.Message)
 				MessageBox.Show("Error Connecting to Database: " & myerror.Message)
 			Finally
 				SQLcommand.Dispose()
@@ -247,6 +255,7 @@ Module Module1
 				SQLcommand.ExecuteNonQuery()
 
 			Catch myerror As MySqlException
+				_logger.Error(myerror.Message)
 				MessageBox.Show("Error Connecting to Database: " & myerror.Message)
 			Finally
 				'Dispose of and close the connection.
@@ -272,6 +281,7 @@ Module Module1
 				SQLcommand.CommandText = SQLQuery
 				SQLcommand.ExecuteNonQuery()
 			Catch myerror As MySqlException
+				_logger.Error(myerror.Message)
 				MessageBox.Show("Error Connecting to Database: " & myerror.Message)
 				'Finally
 				'Dispose of and close the connection.
@@ -297,6 +307,7 @@ Module Module1
 			MsgBox("Successfully connected to database.")
 			conn.Close()
 		Catch myerror As MySqlException
+			_logger.Error(myerror.Message)
 			MessageBox.Show("Error Connecting to Database: " & myerror.Message)
 		Finally
 			conn.Dispose()
@@ -318,6 +329,7 @@ Module Module1
 			MsgBox("Successfully connected to database.")
 			conn.Close()
 		Catch myerror As MySqlException
+			_logger.Error(myerror.Message)
 			MessageBox.Show("Error Connecting to Database: " & myerror.Message)
 		Finally
 			conn.Dispose()
