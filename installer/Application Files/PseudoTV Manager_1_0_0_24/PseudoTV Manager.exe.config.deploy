@@ -1,0 +1,37 @@
+<configuration>
+  <configSections>
+    <sectionGroup name="userSettings" type="System.Configuration.UserSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" >
+      <section name="PseudoTV_Manager.My.MySettings" type="System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" allowExeDefinition="MachineToLocalUser" requirePermission="false" />
+    </sectionGroup>
+  </configSections>
+  <connectionStrings>
+    <add name="PseudoTV_Manager.My.MySettings.Database1ConnectionString"
+      connectionString="Data Source=|DataDirectory|\Database1.sdf"
+      providerName="Microsoft.SqlServerCe.Client.3.5" />
+  </connectionStrings>
+  <startup useLegacyV2RuntimeActivationPolicy="true">
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.5.1"/>
+  </startup>
+  <userSettings>
+    <PseudoTV_Manager.My.MySettings>
+      <setting name="Version" serializeAs="String">
+        <value>14</value>
+      </setting>
+      <setting name="VideoDatabaseLocation" serializeAs="String">
+        <value />
+      </setting>
+      <setting name="PseudoTvSettingsLocation" serializeAs="String">
+        <value />
+      </setting>
+      <setting name="AddonDatabaseLocation" serializeAs="String">
+        <value />
+      </setting>
+      <setting name="DatabaseType" serializeAs="String">
+        <value>0</value>
+      </setting>
+      <setting name="MySQLConnectionString" serializeAs="String">
+        <value />
+      </setting>
+    </PseudoTV_Manager.My.MySettings>
+  </userSettings>
+</configuration>
