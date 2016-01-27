@@ -49,12 +49,11 @@ namespace PseudoTV_Manager
             return fileText;
         }
 
-
         public static void SaveFile(string filePath, string Data)
         {
-            if (System.IO.File.Exists(filePath) == true)
+            if (File.Exists(filePath))
             {
-                System.IO.StreamWriter objWriter2 = new System.IO.StreamWriter(filePath);
+                StreamWriter objWriter2 = new StreamWriter(filePath);
                 objWriter2.Write(Data);
                 objWriter2.Dispose();
                 objWriter2.Close();
@@ -124,7 +123,6 @@ namespace PseudoTV_Manager
             return ArrayResponse;
         }
 
-
         public static void PluginExecute(string SQLQuery)
         {
             string PluginDatabaseData = "Data Source=" + Settings.Default.AddonDatabaseLocation;
@@ -175,7 +173,7 @@ namespace PseudoTV_Manager
             if (Settings.Default.DatabaseType == 0)
             {
                 //This is a standard, SQLite database.
-                SQLiteConnection sqlConnect = new SQLiteConnection();
+                var sqlConnect = new SQLiteConnection();
                 SQLiteCommand sqlCommand = null;
                 sqlConnect.ConnectionString = "Data Source=" + Settings.Default.VideoDatabaseLocation;
 
@@ -191,22 +189,16 @@ namespace PseudoTV_Manager
                     while (sqlReader.Read())
                     {
                         Array.Resize(ref arrayResponse, x + 1);
-                        string StringResponse = "";
-
+                        var response = "";
 
                         for (var y = 0; y <= ColumnArray.Length - 1; y++)
                         {
-                            if (y > 0)
-                            {
-                                StringResponse = StringResponse + "~" + sqlReader[ColumnArray[y]];
-                            }
-                            else
-                            {
-                                StringResponse = sqlReader[ColumnArray[y]].ToString();
-                            }
+                            response = y > 0
+                                ? $"{response}~{sqlReader[ColumnArray[y]]}"
+                                : sqlReader[ColumnArray[y]].ToString();
                         }
 
-                        arrayResponse[x] = StringResponse;
+                        arrayResponse[x] = response;
 
                         x = x + 1;
 
@@ -223,7 +215,6 @@ namespace PseudoTV_Manager
                 {
                     sqlCommand.Dispose();
                     sqlConnect.Close();
-
                 }
 
             }
@@ -238,9 +229,9 @@ namespace PseudoTV_Manager
                     sqlConnect.Open();
                     sqlCommand = sqlConnect.CreateCommand();
                     sqlCommand.CommandText = sqlStatement;
-                    MySqlDataReader sqlReader = sqlCommand.ExecuteReader();
+                    var sqlReader = sqlCommand.ExecuteReader();
 
-                    int x = 0;
+                    var x = 0;
 
                     while (sqlReader.Read())
                     {
@@ -250,20 +241,13 @@ namespace PseudoTV_Manager
 
                         for (var y = 0; y <= ColumnArray.Length; y++)
                         {
-                            if (y > 0)
-                            {
-                                StringResponse = StringResponse + "~" + sqlReader[ColumnArray[y]];
-                            }
-                            else
-                            {
-                                StringResponse = sqlReader[ColumnArray[y]].ToString();
-                            }
+                            StringResponse = y > 0
+                                ? StringResponse + "~" + sqlReader[ColumnArray[y]]
+                                : sqlReader[ColumnArray[y]].ToString();
                         }
 
                         arrayResponse[x] = StringResponse;
-
-                        x = x + 1;
-
+                        x++;
                     }
 
                 }
@@ -285,7 +269,6 @@ namespace PseudoTV_Manager
             return arrayResponse;
 
         }
-
 
         public static void DbExecute(string SQLQuery)
         {
@@ -359,7 +342,7 @@ namespace PseudoTV_Manager
             }
         }
 
-        public static object TestMYSQL(string connectionstring)
+        public static bool TestMySql(string connectionstring)
         {
 
             bool ConnectSuccessful = false;
@@ -387,7 +370,7 @@ namespace PseudoTV_Manager
             return ConnectSuccessful;
         }
 
-        public static bool TestMYSQLite(string connectionstring)
+        public static bool TestMySqlLite(string connectionstring)
         {
             var ConnectSuccessful = false;
 
@@ -414,40 +397,118 @@ namespace PseudoTV_Manager
             return ConnectSuccessful;
         }
 
-        public static object testMysql2(string DBLocation, string sqlStatement, string[] ColumnArray)
+        public static object TestMysql2(string DBLocation, string sqlStatement, string[] ColumnArray)
         {
             //Connect to the data-base
-            MySqlConnection sqlConnect = new MySqlConnection();
-            MySqlCommand sqlCommand = default(MySqlCommand);
-            sqlConnect.ConnectionString = "server=" + "127.0.0.1" + ";" + "user id=" + "xbmc" + ";" + "password=" +
-                                          "xbmc" + ";" + "database=xbmcvideo60";
+            var sqlConnect = new MySqlConnection
+            {
+                ConnectionString = "server=" + "127.0.0.1" + ";" + "user id=" + "xbmc" + ";" + "password=" +
+                                   "xbmc" + ";" + "database=xbmcvideo60"
+            };
             sqlConnect.Open();
-            sqlCommand = sqlConnect.CreateCommand();
+            var sqlCommand = sqlConnect.CreateCommand();
             sqlCommand.CommandText = sqlStatement;
-            MySqlDataReader sqlReader = sqlCommand.ExecuteReader();
+            var sqlReader = sqlCommand.ExecuteReader();
 
             int x = 0;
 
-            string[] ArrayResponse = null;
+            string[] arrayResponse = null;
             while (sqlReader.Read())
             {
-                Array.Resize(ref ArrayResponse, x + 1);
-                string StringResponse = "";
+                //TODO: Artifact of VB Port, use list
+                Array.Resize(ref arrayResponse, x + 1);
+                var response = "";
 
 
                 for (var y = 0; y <= ColumnArray.Length; y++)
-                    StringResponse = y > 0 ? 
-                        StringResponse + "~" + sqlReader[ColumnArray[y]] : 
+                    response = y > 0 ? 
+                        response + "~" + sqlReader[ColumnArray[y]] : 
                         sqlReader[ColumnArray[y]].ToString();
 
-                ArrayResponse[x] = StringResponse;
+                arrayResponse[x] = response;
 
                 x = x + 1;
             }
             sqlCommand.Dispose();
             sqlConnect.Close();
 
-            return ArrayResponse;
+            return arrayResponse;
+        }
+
+        public static int LookUpGenre(string genreName)
+        {
+            //This looks up the Genre based on the name and returns the proper Genre ID
+            var genreId = 0;
+
+            var selectArray = new[] { 0 };
+
+            var genrePar = "name";
+            if ((Settings.Default.KodiVersion < (int)KodiVersion.Isengard))
+            {
+                genrePar = "strGenre";
+            }
+
+            //Shoot it over to the ReadRecord sub
+            var returnArray = DbReadRecord(Settings.Default.VideoDatabaseLocation,
+                "SELECT * FROM genre where " + genrePar + "='" + genreName + "'", selectArray);
+
+            //The ID # is all we need.
+            //Just make sure it's not a null reference.
+            if (returnArray == null) MessageBox.Show("nothing!");
+            else genreId = Convert.ToInt32(returnArray[0]);
+
+            return genreId;
+        }
+
+        public static string LookUpNetwork(string network)
+        {
+            //This looks up the Network name and returns the proper Network ID
+
+            string networkId = null;
+
+            var selectArray = new[] { 0 };
+
+            var studioPar = "name";
+            if ((Settings.Default.KodiVersion < (int)KodiVersion.Isengard))
+            {
+                studioPar = "strStudio";
+            }
+
+            //Shoot it over to the ReadRecord sub
+            var returnArray = DbReadRecord(Settings.Default.VideoDatabaseLocation,
+                "SELECT * FROM studio where " + studioPar + "='" + network + "'", selectArray);
+
+            //The ID # is all we need.
+            //Just make sure it's not a null reference.
+            if (returnArray == null)
+            {
+            }
+            else
+            {
+                networkId = returnArray[0];
+            }
+            return networkId;
+
+        }
+
+        public static string ConvertGenres(ListBox genrelist)
+        {
+            //Converts the existing ListTVGenre's contents to the proper format.
+
+            var tvGenresString = "";
+            for (var x = 0; x <= genrelist.Items.Count - 1; x++)
+            {
+                if (x == 0)
+                {
+                    tvGenresString = genrelist.Items[x].ToString();
+                }
+                else
+                {
+                    tvGenresString = tvGenresString + " / " + genrelist.Items[x].ToString();
+                }
+            }
+
+            return tvGenresString;
         }
 
         public static InputDialogResponse ShowInputDialog(string question, string inputTxt = null)
@@ -455,7 +516,7 @@ namespace PseudoTV_Manager
             var size = new System.Drawing.Size(200, 70);
             var inputBox = new Form
             {
-                FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
                 ClientSize = size,
                 Text = inputTxt ?? question
             };
@@ -470,7 +531,7 @@ namespace PseudoTV_Manager
 
             var okButton = new Button
             {
-                DialogResult = System.Windows.Forms.DialogResult.OK,
+                DialogResult = DialogResult.OK,
                 Name = "okButton",
                 Size = new System.Drawing.Size(75, 23),
                 Text = "&OK",
@@ -480,7 +541,7 @@ namespace PseudoTV_Manager
 
             var cancelButton = new Button
             {
-                DialogResult = System.Windows.Forms.DialogResult.Cancel,
+                DialogResult = DialogResult.Cancel,
                 Name = "cancelButton",
                 Size = new System.Drawing.Size(75, 23),
                 Text = "&Cancel",

@@ -22,8 +22,6 @@ namespace PseudoTV_Manager.Forms
         private readonly MainWindow _mainWindow;
 
         public string User = Environment.UserName;
-        private string _videoDbFile;
-        private string _addonDbFile;
         private string _kodiVersionString;
 
         public KodiVersion KodiVersion = KodiVersion.Helix;
@@ -32,7 +30,7 @@ namespace PseudoTV_Manager.Forms
         private readonly OpenFileDialog _settingsFileDialog;
         private readonly OpenFileDialog _addonDbFileDialog
             ;
-        private void BtnVideoDbLocationBrowse_Click(System.Object sender, System.EventArgs e)
+        private void BtnVideoDbLocationBrowse_Click(object sender, EventArgs e)
         {
             _kodiVersionString = XbmcVersion.SelectedIndex == 0 ? "XBMC" : "Kodi";
 
@@ -47,7 +45,7 @@ namespace PseudoTV_Manager.Forms
             }
         }
 
-        private void BtnPseudoTvSettingsLocationBrowse_Click(System.Object sender, System.EventArgs e)
+        private void BtnPseudoTvSettingsLocationBrowse_Click(object sender, EventArgs e)
         {
             _settingsFileDialog.InitialDirectory = "C:\\Users\\" + User + "\\AppData\\Roaming\\" + _kodiVersionString + "\\userdata\\addon_data\\script.pseudotv.live";
 
@@ -61,7 +59,7 @@ namespace PseudoTV_Manager.Forms
 
         }
 
-        private void BtnAddonDbLocationBrowse_Click(System.Object sender, System.EventArgs e)
+        private void BtnAddonDbLocationBrowse_Click(object sender, EventArgs e)
         {
             _addonDbFileDialog.InitialDirectory = "C:\\Users\\" + User + "\\AppData\\Roaming\\" + _kodiVersionString + "\\userdata\\Database";
 
@@ -76,78 +74,54 @@ namespace PseudoTV_Manager.Forms
         }
 
 
-        private void SaveSettings_Click(System.Object sender, System.EventArgs e)
+        private void SaveSettings_Click(object sender, EventArgs e)
         {
-            //Dim SettingsFile As String = Application.StartupPath() & "\" & "Settings.txt"
-
-            //See if there's already a text file in place, if not then create one.
-
-            //If System.IO.File.Exists(SettingsFile) = False Then
-            //System.IO.File.Create(SettingsFile)
-            //End If
-
-            //Verify that all 3 files indeed exist at least
-
-            if (System.IO.File.Exists(TxtVideoDbLocation.Text) == true & System.IO.File.Exists(TxtPseudoTvSettingsLocation.Text) == true & System.IO.File.Exists(TxtAddonDatabaseLocation.Text) == true)
+            if (File.Exists(TxtVideoDbLocation.Text) & File.Exists(TxtPseudoTvSettingsLocation.Text) & File.Exists(TxtAddonDatabaseLocation.Text))
             {
                 KodiVersion = PseudoTvUtils.GetKodiVersion(TxtVideoDbLocation.Text);
 
+                if (PseudoTvUtils.TestMySqlLite(TxtVideoDbLocation.Text) != true) return;
 
-                if (PseudoTvUtils.TestMYSQLite(TxtVideoDbLocation.Text) == true)
-                {
-                    //Save them to the settings file
-                    //Dim FilePaths As String = "0" & " | " & TxtVideoDbLocation.Text & " | " & TxtPseudoTvSettingsLocation.Text & " | " & TxtAddonDatabaseLocation.Text
-                    //SaveFile(SettingsFile, FilePaths)
+                //Now, update all settings
+                Settings.Default.DatabaseType = 0;
+                Settings.Default.VideoDatabaseLocation = TxtVideoDbLocation.Text;
+                Settings.Default.PseudoTvSettingsLocation = TxtPseudoTvSettingsLocation.Text;
+                Settings.Default.AddonDatabaseLocation = TxtAddonDatabaseLocation.Text;
+                Settings.Default.KodiVersion = (int)KodiVersion;
+                Settings.Default.Save();
 
-                    //Now, update all settings
-                    Settings.Default.DatabaseType = 0;
-                    Settings.Default.VideoDatabaseLocation = TxtVideoDbLocation.Text;
-                    Settings.Default.PseudoTvSettingsLocation = TxtPseudoTvSettingsLocation.Text;
-                    Settings.Default.AddonDatabaseLocation = TxtAddonDatabaseLocation.Text;
-                    Settings.Default.KodiVersion = (int)KodiVersion;
-                    Settings.Default.Save();
+                //Refresh everything
+                _mainWindow.RefreshAll();
+                _mainWindow.RefreshTvGuide();
 
-                    //Refresh everything
-                    _mainWindow.RefreshAll();
-                    _mainWindow.RefreshTvGuide();
-
-                    Visible = false;
-                    _mainWindow.Focus();
-                }
-
+                Visible = false;
+                _mainWindow.Focus();
             }
-            else if (!string.IsNullOrEmpty(TxtMySqlServer.Text) & !string.IsNullOrEmpty(TxtMySqlUserId.Text) & !string.IsNullOrEmpty(TxtMySqlDatabase.Text) & System.IO.File.Exists(TxtPseudoTvSettingsLocation.Text) == true & System.IO.File.Exists(TxtAddonDatabaseLocation.Text) == true)
+            else if (!string.IsNullOrEmpty(TxtMySqlServer.Text) & !string.IsNullOrEmpty(TxtMySqlUserId.Text) & !string.IsNullOrEmpty(TxtMySqlDatabase.Text) & File.Exists(TxtPseudoTvSettingsLocation.Text) & File.Exists(TxtAddonDatabaseLocation.Text))
             {
-                //server=localhost; user id=mike; password=12345; database=in_out
+                var connectionString = "server=" + TxtMySqlServer.Text + "; user id=" + TxtMySqlUserId.Text + "; password=" + TxtMySqlPassword.Text + "; database=" + TxtMySqlDatabase.Text + "; port=" + TxtMySqlPort.Text;
 
-                dynamic connectionString = "server=" + TxtMySqlServer.Text + "; user id=" + TxtMySqlUserId.Text + "; password=" + TxtMySqlPassword.Text + "; database=" + TxtMySqlDatabase.Text + "; port=" + TxtMySqlPort.Text;
+                if (!PseudoTvUtils.TestMySql(connectionString)) return;
+                
+                //Now, update all settings
+                Settings.Default.DatabaseType = 1;
+                Settings.Default.MySqlConnectionString = connectionString;
+                Settings.Default.PseudoTvSettingsLocation = TxtPseudoTvSettingsLocation.Text;
+                Settings.Default.AddonDatabaseLocation = TxtAddonDatabaseLocation.Text;
+                Settings.Default.KodiVersion = (int)KodiVersion;
+                Settings.Default.Save();
 
+                //Refresh everything
+                _mainWindow.RefreshAll();
+                _mainWindow.RefreshTvGuide();
 
-                if (PseudoTvUtils.TestMYSQL(connectionString) == true)
-                {
-                    //Dim FilePaths As String = "1" & " | " & ConnectionString & " | " & TxtPseudoTvSettingsLocation.Text & " | " & TxtAddonDatabaseLocation.Text
-                    //SaveFile(SettingsFile, FilePaths)
-
-                    //Now, update all settings
-                    Settings.Default.DatabaseType = 1;
-                    Settings.Default.MySqlConnectionString = connectionString;
-                    Settings.Default.PseudoTvSettingsLocation = TxtPseudoTvSettingsLocation.Text;
-                    Settings.Default.AddonDatabaseLocation = TxtAddonDatabaseLocation.Text;
-                    Settings.Default.KodiVersion = (int)KodiVersion;
-                    Settings.Default.Save();
-
-                    //Refresh everything
-                    _mainWindow.RefreshAll();
-                    _mainWindow.RefreshTvGuide();
-
-                    this.Visible = false;
-                    _mainWindow.Focus();
-                }
+                Visible = false;
+                _mainWindow.Focus();
             }
         }
 
 
-        private void SettingsWindow_Load(object sender, System.EventArgs e)
+        private void SettingsWindow_Load(object sender, EventArgs e)
         {
             switch (KodiVersion)
             {
@@ -176,18 +150,15 @@ namespace PseudoTV_Manager.Forms
                 FindKodiSettings();
             }
 
-            if (!string.IsNullOrEmpty(Settings.Default.MySqlConnectionString))
-            {
-                var splitString = Settings.Default.MySqlConnectionString.Split(';');
+            if (string.IsNullOrEmpty(Settings.Default.MySqlConnectionString)) return;
+            var splitString = Settings.Default.MySqlConnectionString.Split(';');
 
-                TxtPseudoTvSettingsLocation.Text = Settings.Default.PseudoTvSettingsLocation;
-                TxtMySqlServer.Text = Regex.Split(splitString[0], "server=")[1];
-                TxtMySqlUserId.Text = Regex.Split(splitString[1], "user id=")[1];
-                TxtMySqlPassword.Text = Regex.Split(splitString[2], "password=")[1];
-                TxtMySqlDatabase.Text = Regex.Split(splitString[3], "database=")[1];
-                TxtMySqlPort.Text = Regex.Split(splitString[4], "port=")[1];
-            }
-
+            TxtPseudoTvSettingsLocation.Text = Settings.Default.PseudoTvSettingsLocation;
+            TxtMySqlServer.Text = Regex.Split(splitString[0], "server=")[1];
+            TxtMySqlUserId.Text = Regex.Split(splitString[1], "user id=")[1];
+            TxtMySqlPassword.Text = Regex.Split(splitString[2], "password=")[1];
+            TxtMySqlDatabase.Text = Regex.Split(splitString[3], "database=")[1];
+            TxtMySqlPort.Text = Regex.Split(splitString[4], "port=")[1];
         }
 
         private void FindKodiSettings()
@@ -219,22 +190,21 @@ namespace PseudoTV_Manager.Forms
             foreach (var file in filelist)
             {
                 var match = regex.Match(file.Name);
-                if (match.Success)
+                if (!match.Success) continue;
+                switch (match.Groups[1].Value)
                 {
-                    if ((match.Groups[1].Value == "MyVideos"))
-                    {
+                    case "MyVideos":
                         KodiVersion = PseudoTvUtils.GetKodiVersion(file.Name);
                         TxtVideoDbLocation.Text = file.FullName;
-                    }
-                    else if ((match.Groups[1].Value == "Addons"))
-                    {
+                        break;
+                    case "Addons":
                         TxtAddonDatabaseLocation.Text = file.FullName;
-                    }
+                        break;
                 }
             }
 
-            //C:\Users\Scott\AppData\Roaming\Kodi\userdata\addon_data\script.pseudotv.live\settings2.xml
-            if ((System.IO.File.Exists(addonDataFolder + "\\script.pseudotv.live\\settings2.xml")))
+            //C:\Users\%CurrentUser%\AppData\Roaming\Kodi\userdata\addon_data\script.pseudotv.live\settings2.xml
+            if ((File.Exists(addonDataFolder + "\\script.pseudotv.live\\settings2.xml")))
             {
                 TxtPseudoTvSettingsLocation.Text = addonDataFolder + "\\script.pseudotv.live\\settings2.xml";
             }
@@ -259,7 +229,7 @@ namespace PseudoTV_Manager.Forms
         //This looks up the Genre based on the name and returns the proper Genre ID
         public int ReadVersion(string genreName)
         {
-            int genreId = 0;
+            var genreId = 0;
 
             var selectArray = new[] { 0 };
 
@@ -269,13 +239,9 @@ namespace PseudoTV_Manager.Forms
             //The ID # is all we need.
             //Just make sure it's not a null reference.
             if (returnArray == null)
-            {
                 PseudoTvUtils.ShowInputDialog("Could not find version of Kodi installed! KodiVersion table didn't return an idVersion");
-            }
             else
-            {
                 genreId = Convert.ToInt32(returnArray[0]);
-            }
 
             return genreId;
         }

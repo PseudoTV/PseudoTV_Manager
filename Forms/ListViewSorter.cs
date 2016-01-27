@@ -1,11 +1,3 @@
-using Microsoft.VisualBasic;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.Windows.Forms;
-
 namespace PseudoTV_Manager.Forms
 {
     using System.Collections;
@@ -17,19 +9,9 @@ namespace PseudoTV_Manager.Forms
     public class ListViewSorter : IComparer
     {
         /// <summary>
-        /// Specifies the column to be sorted
-        /// </summary>
-        private int ColumnToSort;
-        /// <summary>
-        /// Specifies the order in which to sort (i.e. 'Ascending').
-        /// </summary>
-        private SortOrder OrderOfSort;
-        /// <summary>
         /// Case insensitive comparer object
         /// </summary>
-        private CaseInsensitiveComparer ObjectCompare;
-        private int v;
-        private SortOrder ascending;
+        private readonly CaseInsensitiveComparer _objectCompare;
 
         /// <summary>
         /// Class constructor.  Initializes various elements
@@ -37,20 +19,20 @@ namespace PseudoTV_Manager.Forms
         public ListViewSorter()
         {
             // Initialize the column to '0'
-            ColumnToSort = 0;
+            SortColumn = 0;
 
             // Initialize the sort order to 'none'
-            OrderOfSort = SortOrder.None;
+            Order = SortOrder.None;
 
             // Initialize the CaseInsensitiveComparer object
-            ObjectCompare = new CaseInsensitiveComparer();
+            _objectCompare = new CaseInsensitiveComparer();
         }
 
         public ListViewSorter(int sortColumn, SortOrder sortOrder)
         {
-            this.SortColumn = sortColumn;
-            this.OrderOfSort = sortOrder;
-            ObjectCompare = new CaseInsensitiveComparer();
+            SortColumn = sortColumn;
+            Order = sortOrder;
+            _objectCompare = new CaseInsensitiveComparer();
         }
 
         /// <summary>
@@ -61,7 +43,6 @@ namespace PseudoTV_Manager.Forms
         /// <returns>The result of the comparison. "0" if equal, negative if 'x' is less than 'y' and positive if 'x' is greater than 'y'</returns>
         public int Compare(object x, object y)
         {
-            int compareResult;
             ListViewItem listviewX, listviewY;
 
             // Cast the objects to be compared to ListViewItem objects
@@ -69,18 +50,17 @@ namespace PseudoTV_Manager.Forms
             listviewY = (ListViewItem)y;
 
             // Compare the two items
-            compareResult = ObjectCompare.Compare(listviewX.SubItems[ColumnToSort].Text, listviewY.SubItems[ColumnToSort].Text);
+            var compareResult = _objectCompare.Compare(listviewX.SubItems[SortColumn].Text, listviewY.SubItems[SortColumn].Text);
 
             // Calculate correct return value based on object comparison
-            if (OrderOfSort == SortOrder.Ascending)
+            switch (Order)
             {
-                // Ascending sort is selected, return normal result of compare operation
-                return compareResult;
-            }
-            if (OrderOfSort == SortOrder.Descending)
-            {
-                // Descending sort is selected, return negative result of compare operation
-                return (-compareResult);
+                case SortOrder.Ascending:
+                    // Ascending sort is selected, return normal result of compare operation
+                    return compareResult;
+                case SortOrder.Descending:
+                    // Descending sort is selected, return negative result of compare operation
+                    return (-compareResult);
             }
             // Return '0' to indicate they are equal
             return 0;
@@ -89,33 +69,12 @@ namespace PseudoTV_Manager.Forms
         /// <summary>
         /// Gets or sets the number of the column to which to apply the sorting operation (Defaults to '0').
         /// </summary>
-        public int SortColumn
-        {
-            set
-            {
-                ColumnToSort = value;
-            }
-            get
-            {
-                return ColumnToSort;
-            }
-        }
+        public int SortColumn { set; get; }
 
         /// <summary>
         /// Gets or sets the order of sorting to apply (for example, 'Ascending' or 'Descending').
         /// </summary>
-        public SortOrder Order
-        {
-            set
-            {
-                OrderOfSort = value;
-            }
-            get
-            {
-                return OrderOfSort;
-            }
-        }
-
+        public SortOrder Order { set; get; }
     }
 
 }

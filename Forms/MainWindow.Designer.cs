@@ -31,8 +31,8 @@ namespace PseudoTV_Manager.Forms
 		private void InitializeComponent()
 		{
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            this.DelExcludeBtn = new System.Windows.Forms.Button();
-            this.AddExcludeBtn = new System.Windows.Forms.Button();
+            this.BtnDelExclude = new System.Windows.Forms.Button();
+            this.BtnAddExclude = new System.Windows.Forms.Button();
             this.TabPage4 = new System.Windows.Forms.TabPage();
             this.SaveExcludeBtn = new System.Windows.Forms.Button();
             this.GDataDemoLink = new System.Windows.Forms.LinkLabel();
@@ -50,13 +50,11 @@ namespace PseudoTV_Manager.Forms
             this.TVGuideSubMenu = new System.Windows.Forms.ListView();
             this.TVGuideShowName = new System.Windows.Forms.Label();
             this.Button13 = new System.Windows.Forms.Button();
-            this.Button14 = new System.Windows.Forms.Button();
-            this.Button11 = new System.Windows.Forms.Button();
-            this.Button12 = new System.Windows.Forms.Button();
-            this.Button9 = new System.Windows.Forms.Button();
-            this.Button10 = new System.Windows.Forms.Button();
-            this.Button8 = new System.Windows.Forms.Button();
-            this.Button7 = new System.Windows.Forms.Button();
+            this.BtnAddTvGuideChannel = new System.Windows.Forms.Button();
+            this.BtnDelChannelSchedule = new System.Windows.Forms.Button();
+            this.BtnAddChannelSchedule = new System.Windows.Forms.Button();
+            this.BtnDelInterleavedChannel = new System.Windows.Forms.Button();
+            this.BtnAddInterleavedChannel = new System.Windows.Forms.Button();
             this.BtnTvGuideSave = new System.Windows.Forms.Button();
             this.NotShows = new System.Windows.Forms.ListBox();
             this.Label12 = new System.Windows.Forms.Label();
@@ -121,7 +119,7 @@ namespace PseudoTV_Manager.Forms
             this.label26 = new System.Windows.Forms.Label();
             this.label25 = new System.Windows.Forms.Label();
             this.HelpList = new System.Windows.Forms.ComboBox();
-            this.StatusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.Button16 = new System.Windows.Forms.Button();
             this.BtnDeleteGenre = new System.Windows.Forms.Button();
             this.TabControl1 = new System.Windows.Forms.TabControl();
@@ -172,7 +170,7 @@ namespace PseudoTV_Manager.Forms
             this.TabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MoviePicture)).BeginInit();
             this.TabPage6.SuspendLayout();
-            this.StatusStrip1.SuspendLayout();
+            this.StatusStrip.SuspendLayout();
             this.TabControl1.SuspendLayout();
             this.TabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TVBannerPictureBox)).BeginInit();
@@ -181,32 +179,34 @@ namespace PseudoTV_Manager.Forms
             this.MenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
-            // DelExcludeBtn
+            // BtnDelExclude
             // 
-            this.DelExcludeBtn.Location = new System.Drawing.Point(910, 610);
-            this.DelExcludeBtn.Name = "DelExcludeBtn";
-            this.DelExcludeBtn.Size = new System.Drawing.Size(39, 22);
-            this.DelExcludeBtn.TabIndex = 61;
-            this.DelExcludeBtn.Text = "Del";
-            this.DelExcludeBtn.UseVisualStyleBackColor = true;
-            this.DelExcludeBtn.Visible = false;
+            this.BtnDelExclude.Location = new System.Drawing.Point(823, 610);
+            this.BtnDelExclude.Name = "BtnDelExclude";
+            this.BtnDelExclude.Size = new System.Drawing.Size(39, 22);
+            this.BtnDelExclude.TabIndex = 61;
+            this.BtnDelExclude.Text = "Del";
+            this.BtnDelExclude.UseVisualStyleBackColor = true;
+            this.BtnDelExclude.Visible = false;
+            this.BtnDelExclude.Click += new System.EventHandler(this.BtnDelExclude_Click);
             // 
-            // AddExcludeBtn
+            // BtnAddExclude
             // 
-            this.AddExcludeBtn.Location = new System.Drawing.Point(866, 610);
-            this.AddExcludeBtn.Name = "AddExcludeBtn";
-            this.AddExcludeBtn.Size = new System.Drawing.Size(39, 22);
-            this.AddExcludeBtn.TabIndex = 58;
-            this.AddExcludeBtn.Text = "Add";
-            this.AddExcludeBtn.UseVisualStyleBackColor = true;
-            this.AddExcludeBtn.Visible = false;
+            this.BtnAddExclude.Location = new System.Drawing.Point(778, 610);
+            this.BtnAddExclude.Name = "BtnAddExclude";
+            this.BtnAddExclude.Size = new System.Drawing.Size(39, 22);
+            this.BtnAddExclude.TabIndex = 58;
+            this.BtnAddExclude.Text = "Add";
+            this.BtnAddExclude.UseVisualStyleBackColor = true;
+            this.BtnAddExclude.Visible = false;
+            this.BtnAddExclude.Click += new System.EventHandler(this.BtnAddExclude_Click);
             // 
             // TabPage4
             // 
             this.TabPage4.BackColor = System.Drawing.Color.Gray;
-            this.TabPage4.Controls.Add(this.DelExcludeBtn);
+            this.TabPage4.Controls.Add(this.BtnDelExclude);
             this.TabPage4.Controls.Add(this.SaveExcludeBtn);
-            this.TabPage4.Controls.Add(this.AddExcludeBtn);
+            this.TabPage4.Controls.Add(this.BtnAddExclude);
             this.TabPage4.Controls.Add(this.GDataDemoLink);
             this.TabPage4.Controls.Add(this.SortTypeBox);
             this.TabPage4.Controls.Add(this.SortType);
@@ -222,13 +222,11 @@ namespace PseudoTV_Manager.Forms
             this.TabPage4.Controls.Add(this.TVGuideSubMenu);
             this.TabPage4.Controls.Add(this.TVGuideShowName);
             this.TabPage4.Controls.Add(this.Button13);
-            this.TabPage4.Controls.Add(this.Button14);
-            this.TabPage4.Controls.Add(this.Button11);
-            this.TabPage4.Controls.Add(this.Button12);
-            this.TabPage4.Controls.Add(this.Button9);
-            this.TabPage4.Controls.Add(this.Button10);
-            this.TabPage4.Controls.Add(this.Button8);
-            this.TabPage4.Controls.Add(this.Button7);
+            this.TabPage4.Controls.Add(this.BtnAddTvGuideChannel);
+            this.TabPage4.Controls.Add(this.BtnDelChannelSchedule);
+            this.TabPage4.Controls.Add(this.BtnAddChannelSchedule);
+            this.TabPage4.Controls.Add(this.BtnDelInterleavedChannel);
+            this.TabPage4.Controls.Add(this.BtnAddInterleavedChannel);
             this.TabPage4.Controls.Add(this.BtnTvGuideSave);
             this.TabPage4.Controls.Add(this.NotShows);
             this.TabPage4.Controls.Add(this.Label12);
@@ -265,7 +263,7 @@ namespace PseudoTV_Manager.Forms
             this.TabPage4.ForeColor = System.Drawing.SystemColors.ControlText;
             this.TabPage4.Location = new System.Drawing.Point(4, 22);
             this.TabPage4.Name = "TabPage4";
-            this.TabPage4.Size = new System.Drawing.Size(992, 874);
+            this.TabPage4.Size = new System.Drawing.Size(992, 662);
             this.TabPage4.TabIndex = 3;
             this.TabPage4.Text = "TV Guide";
             // 
@@ -304,6 +302,7 @@ namespace PseudoTV_Manager.Forms
             this.SortTypeBox.Size = new System.Drawing.Size(103, 21);
             this.SortTypeBox.TabIndex = 54;
             this.SortTypeBox.Visible = false;
+            this.SortTypeBox.SelectedIndexChanged += new System.EventHandler(this.SaveTVShow_Click);
             // 
             // SortType
             // 
@@ -335,6 +334,7 @@ namespace PseudoTV_Manager.Forms
             this.MediaLimitBox.Size = new System.Drawing.Size(61, 21);
             this.MediaLimitBox.TabIndex = 52;
             this.MediaLimitBox.Visible = false;
+            this.MediaLimitBox.SelectedIndexChanged += new System.EventHandler(this.MnuSettings_Click);
             // 
             // MediaLimit
             // 
@@ -405,6 +405,7 @@ namespace PseudoTV_Manager.Forms
             this.YouTubeType.Size = new System.Drawing.Size(211, 21);
             this.YouTubeType.TabIndex = 45;
             this.YouTubeType.Visible = false;
+            this.YouTubeType.SelectedIndexChanged += new System.EventHandler(this.YouTubeType_SelectedIndexChanged);
             // 
             // StrmUrlBox
             // 
@@ -453,75 +454,61 @@ namespace PseudoTV_Manager.Forms
             this.Button13.TabIndex = 40;
             this.Button13.Text = "Del";
             this.Button13.UseVisualStyleBackColor = true;
+            this.Button13.Click += new System.EventHandler(this.Button13_Click);
             // 
-            // Button14
+            // BtnAddTvGuideChannel
             // 
-            this.Button14.Location = new System.Drawing.Point(9, 610);
-            this.Button14.Name = "Button14";
-            this.Button14.Size = new System.Drawing.Size(39, 22);
-            this.Button14.TabIndex = 39;
-            this.Button14.Text = "Add";
-            this.Button14.UseVisualStyleBackColor = true;
+            this.BtnAddTvGuideChannel.Location = new System.Drawing.Point(9, 610);
+            this.BtnAddTvGuideChannel.Name = "BtnAddTvGuideChannel";
+            this.BtnAddTvGuideChannel.Size = new System.Drawing.Size(39, 22);
+            this.BtnAddTvGuideChannel.TabIndex = 39;
+            this.BtnAddTvGuideChannel.Text = "Add";
+            this.BtnAddTvGuideChannel.UseVisualStyleBackColor = true;
+            this.BtnAddTvGuideChannel.Click += new System.EventHandler(this.BtnAddTvGuideChannel_Click);
             // 
-            // Button11
+            // BtnDelChannelSchedule
             // 
-            this.Button11.Location = new System.Drawing.Point(821, 610);
-            this.Button11.Name = "Button11";
-            this.Button11.Size = new System.Drawing.Size(39, 22);
-            this.Button11.TabIndex = 38;
-            this.Button11.Text = "Del";
-            this.Button11.UseVisualStyleBackColor = true;
-            this.Button11.Visible = false;
+            this.BtnDelChannelSchedule.Location = new System.Drawing.Point(610, 610);
+            this.BtnDelChannelSchedule.Name = "BtnDelChannelSchedule";
+            this.BtnDelChannelSchedule.Size = new System.Drawing.Size(39, 22);
+            this.BtnDelChannelSchedule.TabIndex = 36;
+            this.BtnDelChannelSchedule.Text = "Del";
+            this.BtnDelChannelSchedule.UseVisualStyleBackColor = true;
+            this.BtnDelChannelSchedule.Visible = false;
+            this.BtnDelChannelSchedule.Click += new System.EventHandler(this.BtnDelChannelSchedule_Click);
             // 
-            // Button12
+            // BtnAddChannelSchedule
             // 
-            this.Button12.Location = new System.Drawing.Point(776, 610);
-            this.Button12.Name = "Button12";
-            this.Button12.Size = new System.Drawing.Size(39, 22);
-            this.Button12.TabIndex = 37;
-            this.Button12.Text = "Add";
-            this.Button12.UseVisualStyleBackColor = true;
-            this.Button12.Visible = false;
+            this.BtnAddChannelSchedule.Location = new System.Drawing.Point(564, 610);
+            this.BtnAddChannelSchedule.Name = "BtnAddChannelSchedule";
+            this.BtnAddChannelSchedule.Size = new System.Drawing.Size(39, 22);
+            this.BtnAddChannelSchedule.TabIndex = 35;
+            this.BtnAddChannelSchedule.Text = "Add";
+            this.BtnAddChannelSchedule.UseVisualStyleBackColor = true;
+            this.BtnAddChannelSchedule.Visible = false;
+            this.BtnAddChannelSchedule.Click += new System.EventHandler(this.BtnAddChannelSchedule_Click);
             // 
-            // Button9
+            // BtnDelInterleavedChannel
             // 
-            this.Button9.Location = new System.Drawing.Point(610, 610);
-            this.Button9.Name = "Button9";
-            this.Button9.Size = new System.Drawing.Size(39, 22);
-            this.Button9.TabIndex = 36;
-            this.Button9.Text = "Del";
-            this.Button9.UseVisualStyleBackColor = true;
-            this.Button9.Visible = false;
+            this.BtnDelInterleavedChannel.Location = new System.Drawing.Point(409, 610);
+            this.BtnDelInterleavedChannel.Name = "BtnDelInterleavedChannel";
+            this.BtnDelInterleavedChannel.Size = new System.Drawing.Size(39, 22);
+            this.BtnDelInterleavedChannel.TabIndex = 34;
+            this.BtnDelInterleavedChannel.Text = "Del";
+            this.BtnDelInterleavedChannel.UseVisualStyleBackColor = true;
+            this.BtnDelInterleavedChannel.Visible = false;
+            this.BtnDelInterleavedChannel.Click += new System.EventHandler(this.BtnDelInterleavedChannel_Click);
             // 
-            // Button10
+            // BtnAddInterleavedChannel
             // 
-            this.Button10.Location = new System.Drawing.Point(564, 610);
-            this.Button10.Name = "Button10";
-            this.Button10.Size = new System.Drawing.Size(39, 22);
-            this.Button10.TabIndex = 35;
-            this.Button10.Text = "Add";
-            this.Button10.UseVisualStyleBackColor = true;
-            this.Button10.Visible = false;
-            // 
-            // Button8
-            // 
-            this.Button8.Location = new System.Drawing.Point(409, 610);
-            this.Button8.Name = "Button8";
-            this.Button8.Size = new System.Drawing.Size(39, 22);
-            this.Button8.TabIndex = 34;
-            this.Button8.Text = "Del";
-            this.Button8.UseVisualStyleBackColor = true;
-            this.Button8.Visible = false;
-            // 
-            // Button7
-            // 
-            this.Button7.Location = new System.Drawing.Point(361, 610);
-            this.Button7.Name = "Button7";
-            this.Button7.Size = new System.Drawing.Size(39, 22);
-            this.Button7.TabIndex = 33;
-            this.Button7.Text = "Add";
-            this.Button7.UseVisualStyleBackColor = true;
-            this.Button7.Visible = false;
+            this.BtnAddInterleavedChannel.Location = new System.Drawing.Point(361, 610);
+            this.BtnAddInterleavedChannel.Name = "BtnAddInterleavedChannel";
+            this.BtnAddInterleavedChannel.Size = new System.Drawing.Size(39, 22);
+            this.BtnAddInterleavedChannel.TabIndex = 33;
+            this.BtnAddInterleavedChannel.Text = "Add";
+            this.BtnAddInterleavedChannel.UseVisualStyleBackColor = true;
+            this.BtnAddInterleavedChannel.Visible = false;
+            this.BtnAddInterleavedChannel.MouseCaptureChanged += new System.EventHandler(this.BtnAddInterleavedChannel_Click);
             // 
             // BtnTvGuideSave
             // 
@@ -774,6 +761,7 @@ namespace PseudoTV_Manager.Forms
             this.Button5.Text = "Select";
             this.Button5.UseVisualStyleBackColor = true;
             this.Button5.Visible = false;
+            this.Button5.Click += new System.EventHandler(this.Button5_Click);
             // 
             // PlayListLocation
             // 
@@ -833,6 +821,7 @@ namespace PseudoTV_Manager.Forms
             this.PlayListType.Name = "PlayListType";
             this.PlayListType.Size = new System.Drawing.Size(211, 21);
             this.PlayListType.TabIndex = 2;
+            this.PlayListType.SelectedIndexChanged += new System.EventHandler(this.PlayListType_SelectedIndexChanged);
             // 
             // TVGuideList
             // 
@@ -980,7 +969,7 @@ namespace PseudoTV_Manager.Forms
             this.TabPage3.Controls.Add(this.GenresList);
             this.TabPage3.Location = new System.Drawing.Point(4, 22);
             this.TabPage3.Name = "TabPage3";
-            this.TabPage3.Size = new System.Drawing.Size(992, 874);
+            this.TabPage3.Size = new System.Drawing.Size(992, 662);
             this.TabPage3.TabIndex = 2;
             this.TabPage3.Text = "Genres";
             // 
@@ -1193,17 +1182,18 @@ namespace PseudoTV_Manager.Forms
             this.HelpList.Size = new System.Drawing.Size(241, 21);
             this.HelpList.TabIndex = 0;
             // 
-            // StatusStrip1
+            // StatusStrip
             // 
-            this.StatusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.StatusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.StatusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.StatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Status});
-            this.StatusStrip1.Location = new System.Drawing.Point(0, 713);
-            this.StatusStrip1.Name = "StatusStrip1";
-            this.StatusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 15, 0);
-            this.StatusStrip1.Size = new System.Drawing.Size(1002, 22);
-            this.StatusStrip1.TabIndex = 4;
-            this.StatusStrip1.Text = "StatusStrip1";
+            this.StatusStrip.Location = new System.Drawing.Point(0, 713);
+            this.StatusStrip.Name = "StatusStrip";
+            this.StatusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 15, 0);
+            this.StatusStrip.Size = new System.Drawing.Size(1002, 22);
+            this.StatusStrip.SizingGrip = false;
+            this.StatusStrip.TabIndex = 4;
+            this.StatusStrip.Text = "StatusStrip1";
             // 
             // Button16
             // 
@@ -1675,6 +1665,7 @@ namespace PseudoTV_Manager.Forms
             this.MnuExit.Name = "MnuExit";
             this.MnuExit.Size = new System.Drawing.Size(116, 22);
             this.MnuExit.Text = "Exit";
+            this.MnuExit.Click += new System.EventHandler(this.MnuExit_Click);
             // 
             // MenuStrip
             // 
@@ -1697,7 +1688,8 @@ namespace PseudoTV_Manager.Forms
             this.ClientSize = new System.Drawing.Size(1002, 735);
             this.Controls.Add(this.MenuStrip);
             this.Controls.Add(this.TabControl1);
-            this.Controls.Add(this.StatusStrip1);
+            this.Controls.Add(this.StatusStrip);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "MainWindow";
             this.Text = "PseudoTV Live Manager";
             this.Load += new System.EventHandler(this.MainWindow_Load);
@@ -1708,8 +1700,8 @@ namespace PseudoTV_Manager.Forms
             ((System.ComponentModel.ISupportInitialize)(this.MoviePicture)).EndInit();
             this.TabPage6.ResumeLayout(false);
             this.TabPage6.PerformLayout();
-            this.StatusStrip1.ResumeLayout(false);
-            this.StatusStrip1.PerformLayout();
+            this.StatusStrip.ResumeLayout(false);
+            this.StatusStrip.PerformLayout();
             this.TabControl1.ResumeLayout(false);
             this.TabPage1.ResumeLayout(false);
             this.TabPage1.PerformLayout();
@@ -1724,20 +1716,15 @@ namespace PseudoTV_Manager.Forms
 
 		}
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MnuExit_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         #endregion
 
-        internal System.Windows.Forms.Button DelExcludeBtn;
-        internal System.Windows.Forms.Button AddExcludeBtn;
+        internal System.Windows.Forms.Button BtnDelExclude;
+        internal System.Windows.Forms.Button BtnAddExclude;
         internal System.Windows.Forms.TabPage TabPage4;
         internal System.Windows.Forms.Button SaveExcludeBtn;
         internal System.Windows.Forms.LinkLabel GDataDemoLink;
@@ -1755,13 +1742,11 @@ namespace PseudoTV_Manager.Forms
         internal System.Windows.Forms.ListView TVGuideSubMenu;
         internal System.Windows.Forms.Label TVGuideShowName;
         internal System.Windows.Forms.Button Button13;
-        internal System.Windows.Forms.Button Button14;
-        internal System.Windows.Forms.Button Button11;
-        internal System.Windows.Forms.Button Button12;
-        internal System.Windows.Forms.Button Button9;
-        internal System.Windows.Forms.Button Button10;
-        internal System.Windows.Forms.Button Button8;
-        internal System.Windows.Forms.Button Button7;
+        internal System.Windows.Forms.Button BtnAddTvGuideChannel;
+        internal System.Windows.Forms.Button BtnDelChannelSchedule;
+        internal System.Windows.Forms.Button BtnAddChannelSchedule;
+        internal System.Windows.Forms.Button BtnDelInterleavedChannel;
+        internal System.Windows.Forms.Button BtnAddInterleavedChannel;
         internal System.Windows.Forms.Button BtnTvGuideSave;
         internal System.Windows.Forms.ListBox NotShows;
         internal System.Windows.Forms.Label Label12;
@@ -1823,7 +1808,7 @@ namespace PseudoTV_Manager.Forms
         internal System.Windows.Forms.Label Label13;
         internal System.Windows.Forms.TabPage TabPage6;
         internal System.Windows.Forms.ComboBox HelpList;
-        internal System.Windows.Forms.StatusStrip StatusStrip1;
+        internal System.Windows.Forms.StatusStrip StatusStrip;
         internal System.Windows.Forms.Button Button16;
         internal System.Windows.Forms.Button BtnDeleteGenre;
         internal System.Windows.Forms.TabControl TabControl1;
