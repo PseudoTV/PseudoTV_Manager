@@ -88,7 +88,7 @@ namespace PseudoTV_Manager
                     var stringResponse = "";
 
 
-                    for (var y = 0; y <= columnArray.Length; y++)
+                    for (var y = 0; y < columnArray.Length; y++)
                     {
                         if (y > 0)
                         {

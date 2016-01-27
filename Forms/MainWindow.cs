@@ -57,11 +57,11 @@ namespace PseudoTV_Manager.Forms
                         if (singleLine.Contains("_type" + (char)34 + " value="))
                         {
                             var part1 = Regex.Split(singleLine, "_type")[0];
-                            var part2 = part1.Split('_')[1];
+                            var part2 = Convert.ToInt32(part1.Split('_')[1]);
 
                             Array.Resize(ref channelArray, channelNum + 1);
                             channelNum = channelNum + 1;
-                            channelArray[channelArray.Length - 1] = part2;
+                            channelArray[channelArray.Length - 1] = part2.ToString("00");
 
                         }
 
@@ -1130,15 +1130,12 @@ namespace PseudoTV_Manager.Forms
 
                 //Now loop through each one individually.
 
-                if (returnArray == null)
-                {
-                }
-                else
+                if (returnArray != null)
                 {
                     for (var x = 0; x <= returnArray.Length - 1; x++)
                     {
                         var showNameArray = new string[1];
-                        selectArray[0] = 1;
+                        selectArray[0] = 2;
 
                         var returnArray2 = PseudoTvUtils.DbReadRecord(Settings.Default.VideoDatabaseLocation,
                             "SELECT * FROM tvshow WHERE idShow='" + returnArray[x] + "'", selectArray);
@@ -1165,10 +1162,7 @@ namespace PseudoTV_Manager.Forms
                 }
 
                 //Now loop through each one individually 
-                if (returnArrayMovies == null)
-                {
-                }
-                else
+                if (returnArrayMovies != null)
                 {
                     for (var x = 0; x <= returnArrayMovies.Length - 1; x++)
                     {
@@ -1715,7 +1709,7 @@ namespace PseudoTV_Manager.Forms
                             //Now loop through all the sub-options of each rule.
                             var subOptions = new string[5];
 
-                            for (var z = 2; z <= ruleSettings.Length - 1; z++)
+                            for (var z = 2; z < ruleSettings.Length - 1; z++)
                             {
                                 var optionNum = Convert.ToInt32(ruleSettings[z].Split('^')[0]);
                                 var optionValue = ruleSettings[z].Split('^')[1];
