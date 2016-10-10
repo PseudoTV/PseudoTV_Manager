@@ -1,0 +1,6 @@
+- Do Add Movie Genres Window
+- Do Paste Banner Link Window
+- Do Add TV Genres Window
+- Do New Genre Name Window
+- Do Settings Window
+- Rename all UI components to make sense before coding against them
